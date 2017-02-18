@@ -3,9 +3,22 @@ longi = -80.52;
 markers = [];
 var map;
 
+	var roboIcon = L.Icon.extend({
+		options: {
+			iconSize:     [100, 100],
+			iconAnchor:   [50, 93],
+			popupAnchor:  [0, -73]
+		}
+	});
+
+	var roverIcon = new roboIcon({iconUrl: 'roverIcon.png'});
+
 function updatePos(){
 	lati +=0.0001;
 	longi +=0.0001;
+	if(document.getElementById("followBox").checked){
+		map.setView([lati, longi], 16);
+	}
 }
 
 function changePos(marker){
@@ -19,7 +32,7 @@ function init(){
 	// load a tile layer
 	//L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png?').addTo(map);
 	L.tileLayer('Tiles/{z}/{x}/{y}.png?{foo}', {foo: 'bar'}).addTo(map);
-	var marker = L.marker([lati, longi]).addTo(map);
+	var marker = L.marker([lati, longi], {icon: roverIcon}).addTo(map);
 	var intervalID = setInterval(function(){changePos(marker);}, 100);
 	return map;
 }
