@@ -44,14 +44,11 @@ function changePos(marker){
 }
 
 function init(){
-	// initialize the map
 	map = L.map('map').setView([lati, longi], 13);
-	// load a tile layer
 	//L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png?').addTo(map);
 	L.tileLayer('../../Tiles/{z}/{x}/{y}.png?{foo}', {foo: 'bar'}).addTo(map);
 	var marker = L.marker([lati, longi], {icon: roverIcon}).addTo(map);
 	var intervalID = setInterval(function(){changePos(marker);}, 100);
-	return map;
 }
 
 function addMarker(){
