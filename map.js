@@ -16,8 +16,8 @@ var ColorIcon = L.Icon.extend({
     }
 });
 
-var iconNum = 1
-var iconArr = [new ColorIcon({iconUrl: 'Markers/.png'}),
+var markerNum = 0;
+var iconArr = [new ColorIcon({iconUrl: 'Markers/1.png'}),
 	new ColorIcon({iconUrl: 'Markers/2.png'}),
 	new ColorIcon({iconUrl: 'Markers/3.png'}),
 	new ColorIcon({iconUrl: 'Markers/4.png'}),
@@ -56,15 +56,46 @@ function init(){
 }
 
 function addMarker(){
-	iconNum %= 8;
-	iconNum ++;
 	var lat = document.getElementById("LatF").value;
 	var long = document.getElementById("LongF").value;
 	var description = prompt("Marker Description");
-	var marker = L.marker([lat,long], {icon: iconArr[iconNum], draggable: true, riseOnHover: true}).addTo(map).bindPopup("<b><center>"+description+"</b></center>Lat: " + lat + ", Long:" + long).openPopup();
-	markers.push(marker);
-	marker.dragging.enable();
+	if(description == null || description == ""){
+		description = "Marker " + (markerNum + 1);
+	}
+	
+	var geojsonFeature = {
+        "type": "Feature",
+            "properties": {},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [lat,long]
+        }
+    }
+
+    var marker;
+    L.geoJson(geojsonFeature, {
+        pointToLayer: function(feature, latlng){
+            marker = L.marker([lat,long],{
+				icon: iconArr[markerNum % 8],
+                riseOnHover: true,
+                draggable: true,
+            }).bindPopup("<b><center>" + description + "</b></center>Lat: " + lat + ", Long:" + long +
+			"<br><center><input type='button' value='Delete' class='marker-delete-button'/></center>");
+            marker.on("popupopen", onPopupOpen);
+            return marker;
+        }
+    }).addTo(map);
 	marker.on('dragend', function (e){
-		marker.bindPopup("<b><center>" + description + "</b></center>Lat: " + marker.getLatLng().lat + ", Long:" + marker.getLatLng().lng);
+		marker.bindPopup("<b><center>" + description + "</b></center>Lat: " + marker.getLatLng().lat + ", Long:" + marker.getLatLng().lng +
+			"<br><center><input type='button' value='Delete' class='marker-delete-button'/></center>");
 	});
+	markers.push(marker);
+	markerNum ++;
+}
+
+function onPopupOpen(){
+    var tempMarker = this;
+    $(".marker-delete-button:visible").click(function () {
+        map.removeLayer(tempMarker);
+    });
 }
