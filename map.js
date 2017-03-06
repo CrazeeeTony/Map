@@ -7,12 +7,11 @@ var roverIcon = L.icon({
 
 var ColorIcon = L.Icon.extend({
     options: {
-        shadowUrl: 'leaflet/images/marker-shadow.png',
-        iconSize:     [80, 80],
-        shadowSize:   [41, 41],
-        iconAnchor:   [40, 72],
-        shadowAnchor: [13, 40],
-        popupAnchor:  [0, -60]
+		shadowUrl: 'Markers/shadow.png',
+		iconSize: [25, 41],
+		iconAnchor: [12, 41],
+		popupAnchor: [1, -34],
+		shadowSize: [41, 41]
     }
 });
 
